@@ -1,0 +1,42 @@
+{
+  "name": "projeto-react-25e3-5",
+  "version": "0.0.1",
+  "description": "Webapp para avaliação de games",
+  "homepage": "https://github.com/turms-infnet/projeto-react-25E3-5#readme",
+  "bugs": {
+    "url": "https://github.com/turms-infnet/projeto-react-25E3-5/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/turms-infnet/projeto-react-25E3-5.git"
+  },
+  "license": "MIT",
+  "author": "Tiago Silva",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "react-scripts start",
+    "build": "react-scripts build"
+  },
+  "dependencies": {
+    "react": "19.0.0",
+    "react-dom": "^19.0.0",
+    "react-scripts": "^5.0.0"
+  },
+  "devDependencies": {
+    "sass": "^1.32.0",
+    "loader-utils": "3.2.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
