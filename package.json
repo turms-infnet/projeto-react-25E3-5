@@ -2,7 +2,6 @@
   "name": "projeto-react-25e3-5",
   "version": "0.0.1",
   "description": "Webapp para avaliação de games",
-  "homepage": "https://github.com/turms-infnet/projeto-react-25E3-5#readme",
   "bugs": {
     "url": "https://github.com/turms-infnet/projeto-react-25E3-5/issues"
   },
@@ -19,8 +18,8 @@
     "build": "react-scripts build"
   },
   "dependencies": {
-    "react": "19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
     "react-scripts": "^5.0.0"
   },
   "devDependencies": {
