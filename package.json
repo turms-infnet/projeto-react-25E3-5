@@ -19,13 +19,20 @@
     "deploy": "npm run build && firebase deploy"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^7.3.1",
+    "@mui/material": "^7.3.1",
+    "@mui/styled-engine-sc": "^7.3.1",
+    "@supabase/supabase-js": "^2.55.0",
     "react": "19.1.1",
     "react-dom": "19.1.1",
-    "react-scripts": "^5.0.0"
+    "react-scripts": "^5.0.0",
+    "styled-components": "^6.1.19"
   },
   "devDependencies": {
-    "sass": "^1.32.0",
-    "loader-utils": "3.2.1"
+    "loader-utils": "3.2.1",
+    "sass": "^1.32.0"
   },
   "browserslist": {
     "production": [
