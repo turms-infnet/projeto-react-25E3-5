@@ -3,6 +3,8 @@ export { default as Appbar } from './customs/Appbar.jsx';
 export { default as Avatar } from './customs/Avatar.jsx';
 export { default as Button } from './default/Button.jsx';
 export { default as Card } from './default/Card.jsx';
+export { default as CardActions } from './default/CardActions.jsx';
+export { default as CardContent } from './default/CardContent.jsx';
 export { default as DatePicker } from './default/DatePicker.jsx';
 export { default as DateTimePicker } from './customs/DateTimePicker.jsx';
 export { default as Fab } from './default/Fab.jsx';
