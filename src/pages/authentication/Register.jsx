@@ -34,7 +34,14 @@ const Register = () => {
             }));
             return;
         }
-        if (password.size < 8) {
+        if (password === '') {
+            setError((prev) => ({
+                ...prev,
+                password: { message: 'Senha é obrigatória', show: true }
+            }));
+            return;
+        }
+        if (password.length < 8) {
             setError((prev) => ({
                 ...prev,
                 password: { message: 'Senha deve ter pelo menos 8 caracteres', show: true }
@@ -46,14 +53,6 @@ const Register = () => {
             setError((prev) => ({
                 ...prev,
                 password: { message: 'A senha deve conter pelo menos uma letra maiúscula, uma minúscula, um número e um caractere especial', show: true }
-            }));
-            return;
-        }
-
-        if (password === '') {
-            setError((prev) => ({
-                ...prev,
-                password: { message: 'Senha é obrigatória', show: true }
             }));
             return;
         }
