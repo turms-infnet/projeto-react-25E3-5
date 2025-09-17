@@ -48,6 +48,7 @@ const handleLogin = async () => {
             }
             setMessage('Login realizado com sucesso!');
             Storage.setItem('user', data);
+            window.location.reload();
         } catch (error) {
             if (error.message === "Invalid login credentials") {
                 setMessage('E-mail ou senha inválidos');
