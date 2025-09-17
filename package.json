@@ -1,0 +1,49 @@
+{
+  "name": "projeto-react-25e3-5",
+  "version": "0.0.1",
+  "description": "Webapp para avaliação de games",
+  "bugs": {
+    "url": "https://github.com/turms-infnet/projeto-react-25E3-5/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/turms-infnet/projeto-react-25E3-5.git"
+  },
+  "license": "MIT",
+  "author": "Tiago Silva",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "deploy": "npm run build && firebase deploy"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^7.3.1",
+    "@mui/material": "^7.3.1",
+    "@mui/styled-engine-sc": "^7.3.1",
+    "@supabase/supabase-js": "^2.55.0",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "react-scripts": "^5.0.0",
+    "styled-components": "^6.1.19"
+  },
+  "devDependencies": {
+    "loader-utils": "3.2.1",
+    "sass": "^1.32.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
