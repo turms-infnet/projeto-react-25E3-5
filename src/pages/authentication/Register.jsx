@@ -20,17 +20,17 @@ const Register = () => {
         setError(modeloData);
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            setError((prev) => ({
-                ...prev,
-                email: { message: 'E-mail inválido', show: true }
-            }));
-            return;
-        }
         if (email === '') {
             setError((prev) => ({
                 ...prev,
                 email: { message: 'E-mail é obrigatório', show: true }
+            }));
+            return;
+        }
+        if (!emailRegex.test(email)) {
+            setError((prev) => ({
+                ...prev,
+                email: { message: 'E-mail inválido', show: true }
             }));
             return;
         }
