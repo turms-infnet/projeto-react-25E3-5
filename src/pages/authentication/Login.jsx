@@ -48,7 +48,7 @@ const handleLogin = async () => {
             }
             setMessage('Login realizado com sucesso!');
             Storage.setItem('user', data);
-            window.location.reload();
+            window.location = '/';
         } catch (error) {
             if (error.message === "Invalid login credentials") {
                 setMessage('E-mail ou senha inválidos');
@@ -96,7 +96,7 @@ const handleLogin = async () => {
                     variant="contained" color="primary" fullWidth onClick={handleLogin}>Entrar</Button>
             </Stack>
             <Stack spacing={2} sx={styles.stack}>
-                <a href="">Criar conta</a>
+                <a href="/register">Criar conta</a>
             </Stack>
             <Snackbar 
                 open={message !== ""}

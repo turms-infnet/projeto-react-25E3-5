@@ -134,7 +134,7 @@ const Register = () => {
                     variant="contained" color="primary" fullWidth onClick={handleRegister}>Cadastrar</Button>
             </Stack>
             <Stack spacing={2} sx={styles.stack}>
-                <a href="">Entrar</a>
+                <a href="/login">Entrar</a>
             </Stack>
             <Snackbar 
                 open={message !== ""}
