@@ -7,6 +7,7 @@ import Game from './pages/Game';
 import { ToastProvider } from './hooks/ToastContext';
 import Authentication from './services/Authentication';
 import React from 'react';
+import './styles.scss';
 
 const theme = createTheme({
     palette: {
@@ -60,11 +61,13 @@ const App = () => {
 
     return <ThemeProvider theme={theme}>
                 <ToastProvider>
-                {
-                    isAuthenticated === null ? <h1>Carregando...</h1> : (
-                        isAuthenticated ? getPrivateRoute() : getPublicRoute()
-                    )
-                }
+                    <div className="appBody">
+                        {
+                            isAuthenticated === null ? <h1>Carregando...</h1> : (
+                                isAuthenticated ? getPrivateRoute() : getPublicRoute()
+                            )
+                        }
+                    </div>
                 </ToastProvider>
             </ThemeProvider>;
 }

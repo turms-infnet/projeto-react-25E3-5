@@ -1,17 +1,25 @@
 import supabase from "./SupabaseClient";
 
-const list = async (table, filter, limit) => {
-    const response = await supabase
+const list = async (table, fields, filter, limit, page) => {
+    let response = supabase
         .from(table)
-        .select("*");
+        .select(fields);
 
     if (filter) {
         Object.keys(filter).forEach(key => {
-            response.eq(key, filter[key]);
+            if (filter[key].exact) {
+                response = response.eq(key, filter[key].value);
+            } else {
+                response = response.ilike(key, `%${filter[key].value}%`);
+            }
         });
     }
 
-    return response.range(0, limit ? limit - 1 : 0);
+    if (limit) {
+        response = response.limit(limit);
+    }
+
+    return await response;
 }
 
 const Database = {
@@ -36,7 +44,7 @@ const Database = {
     },
     list: list,
     find: async (table, id) => {
-        const { data, error } = await list(table, { "id": id }, 1);
+        const { data, error } = await list(table, "*", { "id": id }, 1);
         if (error) {
             return null;
         }

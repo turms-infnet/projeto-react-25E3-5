@@ -1,15 +1,15 @@
 import React, { useCallback } from "react";
+import Database from "../services/Database";
 
 const useGames = () => {
     const [games, setGames] = React.useState([]);
     const [game, setGame] = React.useState({});
 
-    const listGames = useCallback(async (orderBy, direction, limit, page) => {
-        setGames([
-            { id: 1, title: 'Game 1' },
-            { id: 2, title: 'Game 2' },
-            { id: 3, title: 'Game 3' }
-        ]);
+    const listGames = useCallback(async (filter, limit, page) => {
+        const { data, error } = await Database.list('game', '*', filter, limit, page);
+        if (!error) {
+            setGames(data);
+        }
     }, []);
 
     const findGame = useCallback(async (id) => {
