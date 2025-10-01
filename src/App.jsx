@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Register from './pages/authentication/Register';
 import Profile from './pages/Profile';
 import Game from './pages/Game';
+import { ToastProvider } from './hooks/ToastContext';
 import Authentication from './services/Authentication';
 import React from 'react';
 
@@ -58,12 +59,14 @@ const App = () => {
     }
 
     return <ThemeProvider theme={theme}>
-        {
-            isAuthenticated === null ? <h1>Carregando...</h1> : (
-                isAuthenticated ? getPrivateRoute() : getPublicRoute()
-            )
-        }
-    </ThemeProvider>;
+                <ToastProvider>
+                {
+                    isAuthenticated === null ? <h1>Carregando...</h1> : (
+                        isAuthenticated ? getPrivateRoute() : getPublicRoute()
+                    )
+                }
+                </ToastProvider>
+            </ThemeProvider>;
 }
 
 export default App;

@@ -6,13 +6,14 @@ import Authentication from "../../services/Authentication";
 import { modeloData } from "./modelo";
 
 import styles from './styles';
+import { useToast } from "../../hooks/ToastContext";
 
 const Register = () => {
+    const { showToast } = useToast();
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
     const [confirmPassword, setConfirmPassword] = React.useState('');
     const [error, setError] = React.useState(modeloData);
-    const [message, setMessage] = React.useState('');
     const [loading, setLoading] = React.useState(false);
 
     const handleRegister = async () => {
@@ -75,11 +76,11 @@ const Register = () => {
             if (error) {
                 throw error;
             }
-            setMessage('Registro realizado com sucesso!');
+            showToast('Registro realizado com sucesso!', 'success');
             console.log(data);
             console.log(JSON.stringify(data));
         } catch (error) {
-            setMessage('Falha no registro: ' + error.message);
+            showToast('Falha no registro: ' + error.message, 'error');
             console.error("Falha no registro", error);
         }
 
@@ -136,12 +137,6 @@ const Register = () => {
             <Stack spacing={2} sx={styles.stack}>
                 <a href="/login">Entrar</a>
             </Stack>
-            <Snackbar 
-                open={message !== ""}
-                autoHideDuration={10000}
-                onClose={() => setMessage('')}
-                message={message}
-            />
         </Grid>
     </Grid>;
 }
