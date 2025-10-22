@@ -6,7 +6,7 @@ import Authentication from "../../services/Authentication";
 import { modeloData } from "./modelo";
 
 import styles from './styles';
-import { useToast } from "../../hooks/ToastContext";
+import { useToast } from "../../context/ToastContext";
 
 const Register = () => {
     const { showToast } = useToast();

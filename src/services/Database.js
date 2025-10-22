@@ -1,6 +1,6 @@
 import supabase from "./SupabaseClient";
 
-const list = async (table, fields, filter, limit, page) => {
+const list = async (table, fields, filter, limit) => {
     let response = supabase
         .from(table)
         .select(fields);
@@ -44,11 +44,12 @@ const Database = {
     },
     list: list,
     find: async (table, id) => {
-        const { data, error } = await list(table, "*", { "id": id }, 1);
-        if (error) {
-            return null;
-        }
-        return data[0];
+        return await list(table, "*", {
+            "id": {
+                exact: true,
+                value: id
+            },
+        }, 1);
     },
 }
 

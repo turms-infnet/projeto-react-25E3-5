@@ -1,11 +1,7 @@
-import React from 'react';
+import { Typography as MuiTypography } from '@mui/material';
 
-const Typography = () => {
-	return (
-		<div>
-			Aqui entrará um Typography
-		</div>
-	);
+const Typography = (props) => {
+	return <MuiTypography {...props}>{props.children}</MuiTypography>
 }
 
 export default Typography;

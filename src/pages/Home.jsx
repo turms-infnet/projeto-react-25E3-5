@@ -11,7 +11,7 @@ const Home = () => {
     const { filter, doFilter } = useFilter();
     
     React.useEffect(() => {
-        listGames(filter.title.value ? filter : null, 10, 1);
+        listGames(filter.title.value ? filter : null, 10, 1, false);
     }, [filter]);
 
     return <>
@@ -24,11 +24,28 @@ const Home = () => {
                     doFilter={doFilter}
                 />
                 <Grid container spacing={2} sx={{ marginTop: 2 }}>
-                    {games.map((game) => (
-                        <Grid item xs={12} sm={6} md={4} lg={3} key={game.id}>
-                            <CardGame game={game} />
-                        </Grid>
-                    ))}
+                    
+                    {
+                        games.length === 0 ? 
+                            <Grid item xs={12}>
+                                Nenhum jogo encontrado.
+                            </Grid>
+                        : 
+                            <>
+                                {
+                                    games.map((game) => (
+                                        <Grid item size={{ xs: 12, sm: 6, md: 4, lg: 3 }} key={game.id}>
+                                            <CardGame game={game} />
+                                        </Grid>
+                                    ))  
+                                }
+                                <Grid item size={{ xs: 12 }}>
+                                    <Button variant="text" onClick={async () => {
+                                        listGames(filter.title.value ? filter : null, 10, 1, true);
+                                    }}>Não encontrei meu jogo</Button>
+                                </Grid>
+                            </>
+                    }
                 </Grid>
             </>;
 }

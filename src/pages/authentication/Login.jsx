@@ -7,7 +7,7 @@ import Storage from "../../services/Storage";
 import { modeloData } from "./modelo";
 
 import styles from './styles';
-import { useToast } from "../../hooks/ToastContext";
+import { useToast } from "../../context/ToastContext";
 
 const Login = () => {
     const { showToast } = useToast();

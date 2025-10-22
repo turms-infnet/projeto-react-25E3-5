@@ -4,7 +4,7 @@ import Home from './pages/Home';
 import Register from './pages/authentication/Register';
 import Profile from './pages/Profile';
 import Game from './pages/Game';
-import { ToastProvider } from './hooks/ToastContext';
+import { ToastProvider } from './context/ToastContext';
 import Authentication from './services/Authentication';
 import React from 'react';
 import './styles.scss';

@@ -14,6 +14,7 @@ import CardHeader from '../default/CardHeader';
 import CardMedia from '../default/CardMedia';
 import CardContent from '../default/CardContent';
 import CardActions from '../default/CardActions';
+import Button from '../default/Button';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -72,6 +73,9 @@ export default function CardGame(props) {
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           {props.game.description.substring(0, 100)}...
         </Typography>
+        <Button onClick={() => {
+          window.location.href = '/game/' + props.game.id;
+        }}>Ver mais</Button>
       </CardContent>
       <CardActions disableSpacing>
         <ExpandMore
