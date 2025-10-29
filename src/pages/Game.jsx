@@ -1,11 +1,11 @@
 import React from "react";
-import { Button, CardGamePlays, Grid, Typography } from "../components";
+import { CardGamePlays, Grid, Typography } from "../components";
 import useGames from "../hooks/useGames";
-import Authentication from "../services/Authentication";
+import { Box, Chip, Divider } from "@mui/material";
 
 const Game = (props) => {
     const id = props.currentRoute.replace('/game/', '');
-    const { game, findGame } = useGames();
+    const { game, findGame, loading } = useGames();
 
     React.useEffect(() => {
         findGame(id);
@@ -13,31 +13,39 @@ const Game = (props) => {
 
     console.log(game)
 
-    return <>
-                <Button text="Logout" onClick={() => {
-                    Authentication.logout();
-                }}>Sair</Button>
-                {game && (
-                    <Grid container>
-                        <Grid item size={{ xs: 12, md: 9.5 }}>
-                            <img src={game.image} alt={game.title} style={{ maxWidth: '100%' }} />
-                            <Typography variant="h5">{game.title}</Typography>
-                            <Typography variant="body1">{game.description}</Typography>
-                        </Grid>
-                        <Grid item size={{ xs: 12, md: 2.5 }} sx={{
-                            pl:1,
-                            pr: 1
-                        }}>
-                            <Typography variant="h6">Gameplays</Typography>
-                            {
-                                game.gameplays ? game.gameplays.map((gameplay) => (
-                                    <CardGamePlays key={gameplay.id} gameplay={gameplay} />
-                                )) : null
-                            }
-                        </Grid>
-                    </Grid>
-                )}
-            </>;
+    return (
+        <>
+            <Grid container spacing={3}>
+                <Grid item xs={12} md={8}>
+                    {loading ? (
+                        <Box sx={{ aspectRatio: '16/9', width: '100%', bgcolor: 'action.hover', borderRadius: 2 }} />
+                    ) : (
+                        <>
+                            <Box sx={{ position: 'relative', overflow: 'hidden', borderRadius: 2, mb: 2 }}>
+                                <img src={game.image} alt={game.title} style={{ width: '100%', display: 'block' }} />
+                                <Chip label={game.release_date ? new Date(game.release_date).toLocaleDateString() : ''} sx={{ position: 'absolute', top: 12, left: 12 }} />
+                            </Box>
+                            <Typography variant="h4" gutterBottom>{game.title}</Typography>
+                            <Typography variant="body1" sx={{ color: 'text.secondary' }}>{game.description}</Typography>
+                        </>
+                    )}
+                </Grid>
+                <Grid item xs={12} md={4}>
+                    <Typography variant="h6" gutterBottom>Gameplays</Typography>
+                    <Divider sx={{ mb: 2, opacity: .2 }} />
+                    {
+                        game?.gameplays?.length ? game.gameplays.map((gp) => (
+                            <Box key={gp.id} sx={{ mb: 1.5 }}>
+                                <CardGamePlays gameplay={gp} />
+                            </Box>
+                        )) : (
+                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>Nenhuma gameplay cadastrada.</Typography>
+                        )
+                    }
+                </Grid>
+            </Grid>
+        </>
+    );
 }
 
 export default Game;

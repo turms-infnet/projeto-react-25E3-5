@@ -1,11 +1,7 @@
-import React from 'react';
+import { Skeleton as MuiSkeleton } from '@mui/material';
 
-const Skeleton = () => {
-	return (
-		<div>
-			Aqui entrará um Skeleton
-		</div>
-	);
+const Skeleton = (props) => {
+  return <MuiSkeleton {...props} />;
 }
 
 export default Skeleton;

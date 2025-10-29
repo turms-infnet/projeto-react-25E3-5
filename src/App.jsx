@@ -1,4 +1,5 @@
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
+import { CssBaseline, Container, Box } from '@mui/material';
 import Login from './pages/authentication/Login';
 import Home from './pages/Home';
 import Register from './pages/authentication/Register';
@@ -8,14 +9,8 @@ import { ToastProvider } from './context/ToastContext';
 import Authentication from './services/Authentication';
 import React from 'react';
 import './styles.scss';
-
-const theme = createTheme({
-    palette: {
-        primary: {
-            main: '#28d219ff',
-        }
-    }
-});
+import Appbar from './components/customs/Appbar';
+import theme from './theme';
 
 const App = () => {
     const [isAuthenticated, setIsAuthenticated] = React.useState(null);
@@ -60,14 +55,18 @@ const App = () => {
     }
 
     return <ThemeProvider theme={theme}>
+                <CssBaseline />
                 <ToastProvider>
-                    <div className="appBody">
-                        {
-                            isAuthenticated === null ? <h1>Carregando...</h1> : (
-                                isAuthenticated ? getPrivateRoute() : getPublicRoute()
-                            )
-                        }
-                    </div>
+                    {isAuthenticated && <Appbar onNavigate={setCurrentRoute} />}
+                    <Container maxWidth="lg">
+                        <Box className="appBody" sx={{ py: 4 }}>
+                            {
+                                isAuthenticated === null ? <h1>Carregando...</h1> : (
+                                    isAuthenticated ? getPrivateRoute() : getPublicRoute()
+                                )
+                            }
+                        </Box>
+                    </Container>
                 </ToastProvider>
             </ThemeProvider>;
 }

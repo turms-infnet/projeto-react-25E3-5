@@ -23,4 +23,4 @@ export { default as Stack } from './default/Stack.jsx';
 export { default as Switch } from './default/Switch.jsx';
 export { default as TextField } from './customs/TextField.jsx';
 export { default as TimePicker } from './default/TimePicker.jsx';
-export { default as Typography } from './default/Typography .jsx';
+export { default as Typography } from './default/Typography.jsx';
