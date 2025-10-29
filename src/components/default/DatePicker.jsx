@@ -1,10 +1,15 @@
-import React from 'react';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker as DatePickerMUI } from '@mui/x-date-pickers/DatePicker';
 
-const DatePicker = () => {
+const DatePicker = (props) => {
 	return (
-		<div>
-			Aqui entrará um DatePicker
-		</div>
+		<LocalizationProvider dateAdapter={AdapterDayjs}>
+			<DemoContainer components={['DatePicker']}>
+				<DatePickerMUI {...props} />
+			</DemoContainer>
+		</LocalizationProvider>
 	);
 }
 

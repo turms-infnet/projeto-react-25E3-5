@@ -9,7 +9,6 @@ export { default as CardHeader } from './default/CardHeader.jsx';
 export { default as CardActions } from './default/CardActions.jsx';
 export { default as CardContent } from './default/CardContent.jsx';
 export { default as DatePicker } from './default/DatePicker.jsx';
-export { default as DateTimePicker } from './customs/DateTimePicker.jsx';
 export { default as CardGame } from './customs/CardGame.jsx';
 export { default as Fab } from './default/Fab.jsx';
 export { default as Grid } from './default/Grid.jsx';

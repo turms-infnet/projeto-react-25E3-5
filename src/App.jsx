@@ -1,11 +1,12 @@
 import { ThemeProvider } from '@mui/material/styles';
-import { CssBaseline, Container, Box } from '@mui/material';
+import { CssBaseline, Container, Box, DialogContent } from '@mui/material';
 import Login from './pages/authentication/Login';
 import Home from './pages/Home';
 import Register from './pages/authentication/Register';
 import Profile from './pages/Profile';
 import Game from './pages/Game';
 import { ToastProvider } from './context/ToastContext';
+import { DialogProvider } from './context/DialogContext';
 import Authentication from './services/Authentication';
 import React from 'react';
 import './styles.scss';
@@ -56,18 +57,20 @@ const App = () => {
 
     return <ThemeProvider theme={theme}>
                 <CssBaseline />
-                <ToastProvider>
-                    {isAuthenticated && <Appbar onNavigate={setCurrentRoute} />}
-                    <Container maxWidth="lg">
-                        <Box className="appBody" sx={{ py: 4 }}>
-                            {
-                                isAuthenticated === null ? <h1>Carregando...</h1> : (
-                                    isAuthenticated ? getPrivateRoute() : getPublicRoute()
-                                )
-                            }
-                        </Box>
-                    </Container>
-                </ToastProvider>
+                <DialogProvider>
+                    <ToastProvider>
+                        {isAuthenticated && <Appbar onNavigate={setCurrentRoute} />}
+                        <Container maxWidth="lg">
+                            <Box className="appBody" sx={{ py: 4 }}>
+                                {
+                                    isAuthenticated === null ? <h1>Carregando...</h1> : (
+                                        isAuthenticated ? getPrivateRoute() : getPublicRoute()
+                                    )
+                                }
+                            </Box>
+                        </Container>
+                    </ToastProvider>
+                </DialogProvider>
             </ThemeProvider>;
 }
 

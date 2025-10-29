@@ -15,6 +15,7 @@ const Filter = (props) => {
                     fullWidth
                 />
                 <SearchIcon sx={{ 
+                    fontSize: '2.8em',
                     p: '10px',
                     position: 'absolute',
                     right: '.5em',

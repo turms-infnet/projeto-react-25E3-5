@@ -51,6 +51,9 @@ const Database = {
             },
         }, 1);
     },
+    findBy: async (table, filter) => {
+        return await list(table, "*", filter, 1);
+    },
 }
 
 export default Database;

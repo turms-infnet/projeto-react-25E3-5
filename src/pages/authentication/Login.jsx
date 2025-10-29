@@ -8,6 +8,7 @@ import { modeloData } from "./modelo";
 
 import styles from './styles';
 import { useToast } from "../../context/ToastContext";
+import Database from "../../services/Database";
 
 const Login = () => {
     const { showToast } = useToast();
@@ -44,12 +45,28 @@ const handleLogin = async () => {
             return;
         }
         try {
-            const {data, error } = await Authentication.login(email, password);
+            const {data, error} = await Authentication.login(email, password);
             if (error) {
                 throw error;
             }
             showToast('Login realizado com sucesso!', 'success');
-            Storage.setItem('user', data);
+
+            const {data: role } = await Database.findBy('user_role', {
+                "xid_user": {
+                    exact: true,
+                    value: data.user.id
+                },
+            });
+
+            console.log(data)
+            
+            Storage.setItem('user', {
+                user: {
+                    ...data.user,
+                    role: role[0].role,
+                },
+                session: data.session
+            });
             window.location = '/';
         } catch (error) {
             if (error.message === "Invalid login credentials") {

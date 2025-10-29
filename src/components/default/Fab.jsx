@@ -1,10 +1,8 @@
-import React from 'react';
+import { Fab as MuiFab } from '@mui/material';
 
-const Fab = () => {
+const Fab = (props) => {
 	return (
-		<div>
-			Aqui entrará um Fab
-		</div>
+		<MuiFab {...props}>{props.children}</MuiFab>
 	);
 }
 
