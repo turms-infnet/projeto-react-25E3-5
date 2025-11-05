@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Fab, Grid } from "../components";
+import { Button, CardMedia, DatePicker, Fab, Grid, Stack, TextField } from "../components";
 import useGames from "../hooks/useGames";
 import AddIcon from '@mui/icons-material/Add';
 import useFilter from "../hooks/useFilter";
@@ -7,14 +7,11 @@ import Filter from "../components/customs/Filter";
 import CardGame from "../components/customs/CardGame";
 import GameCardSkeleton from "../components/customs/GameCardSkeleton";
 import EmptyState from "../components/customs/EmptyState";
-import { useDialog } from "../context/DialogContext";
-import FormGame from "../components/customs/form-game";
-import { LocalConvenienceStoreOutlined } from "@mui/icons-material";
+import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 
 const Home = () => {
-    const { games, listGames, loading } = useGames();
+    const { games, listGames, loading, saveGame } = useGames();
     const { filter, doFilter } = useFilter();
-    const { showDialog } = useDialog();
     const [data, setData] = React.useState({
         title: '',
         description: '',
@@ -22,13 +19,41 @@ const Home = () => {
         release_date: null
     });
 
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).user : null;
-       
+
+    const convertFileToBase64 = (file) => {
+        if(!file) {
+            setData((values) => ({
+                ...values,
+                image: ''
+            }));
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const base64String = reader.result;
+            setData((values) => ({
+                ...values,
+                image: base64String
+            }))
+        }
+        reader.readAsDataURL(file);
+    }
+
     React.useEffect(() => {
         listGames(filter.title.value ? filter : null, 10, 1, false);
     }, [filter]);
-
-    console.log(data)
 
     return <>
                 <Filter 
@@ -80,23 +105,95 @@ const Home = () => {
                     right: '20px',
                     bottom: '20px',
                     }}
-                    onClick={() => {
-                        showDialog(
-                            'Adicionar Jogo', 
-                            'Preencha o formuário para adicionar um jogo', 
-                            <FormGame 
-                                data={data}
-                                setData={setData}
-                            />, 
-                            [{
-                                label: 'Adicionar',
-                                onClick: () => {}
-                            }])
-                    }}
+                    onClick={handleClickOpen}
                     >
                     <AddIcon />
                 </Fab>  : null
             }
+            <Dialog
+                maxWidth={'lg'}
+                fullWidth={true}
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">Criar/Editar Jogo</DialogTitle>
+                <DialogContent>
+                    <form>
+                        <Stack mt={2}>
+                            <TextField
+                                id="name"
+                                name="title"
+                                label="Nome do Jogo"
+                                fullWidth
+                                value={data.title}
+                                onChange={(e) => setData((values) => ({
+                                    ...values,
+                                    title: e.target.value
+                                }))} />
+                        </Stack>
+                        <Stack mt={2}>
+                            <TextField
+                                id="description"
+                                name="description"
+                                label="Descrição"
+                                multiline
+                                rows={4}
+                                fullWidth
+                                value={data.description}
+                                onChange={(e) => setData((values) => ({
+                                    ...values,
+                                    description: e.target.value
+                                }))} />
+                        </Stack>
+                        <Stack mt={2}>
+                            <TextField
+                                id="image"
+                                name="image"
+                                type="file"
+                                fullWidth
+                                onChange={(e) => {
+                                    const file = e.target.files[0];
+                                    convertFileToBase64(file)
+                                }} />
+                            { data.image ? <label for="image">
+                                <CardMedia sx={{
+                                    height: 'auto',
+                                    width: '400px',
+                                    borderRadius: '40px',
+                                    height: '220px',
+                                    backgroundSize: 'contain',
+                                    margin: '30px auto'
+                                }} image={data.image} />
+                            </label>  : null}
+                        </Stack>
+                        <Stack mt={2}>
+                            <DatePicker
+                                id="release_date"
+                                name="release_date"
+                                label="Data de Lançamento"
+                                value={data.release_date}
+                                fullWidth
+                                sx={{
+                                    width: '100%',
+                                }}
+                                onChange={(value) => 
+                                    setData((values) => ({
+                                        ...values,
+                                        release_date: value
+                                    }))
+                                } />
+                        </Stack>
+                    </form>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Cancelar</Button>
+                    <Button onClick={() => {
+                        saveGame(data, filter.title.value ? filter : null, 10, 1, false);
+                    }} autoFocus>Salvar</Button>
+                </DialogActions>
+            </Dialog>
             </>;
 }
 

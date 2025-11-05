@@ -19,10 +19,10 @@ export function DialogProvider({ children }) {
         setOpen(false);
     };
 
-    const showDialog = useCallback((title, text, content, buttons) => {
+    const showDialog = useCallback((title, text, contentFn, buttons) => {
         setTitle(title || '');
         setText(text || null);
-        setContent(content || null);
+        setContent(contentFn);
         setButtons(buttons || []);
         setOpen(true);
     }, []);
@@ -36,7 +36,7 @@ export function DialogProvider({ children }) {
                     text ? <DialogContentText>{text}</DialogContentText> : null
                 }
                 {
-                    content ? content : null
+                    typeof content === 'function' ? content() : content
                 }
             </DialogContent>
             <DialogActions>
