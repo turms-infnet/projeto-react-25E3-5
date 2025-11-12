@@ -2,9 +2,12 @@ import React from 'react';
 import { AppBar, Toolbar, Typography, IconButton, Box, Avatar, Menu, MenuItem, Tooltip, Button } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import Authentication from '../../services/Authentication';
+import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Appbar = () => {
+	const navigate = useNavigate();
+	const { logout } = useAuth();
 	const [anchorEl, setAnchorEl] = React.useState(null);
 
 	const open = Boolean(anchorEl);
@@ -26,7 +29,6 @@ const Appbar = () => {
 						<SearchIcon />
 					</IconButton>
 				</Tooltip>
-				<Button color="inherit" onClick={() => Authentication.logout()}>Sair</Button>
 				<Tooltip title="Conta">
 					<IconButton onClick={handleOpen} size="small" sx={{ ml: 1 }} aria-controls={open ? 'account-menu' : undefined} aria-haspopup="true" aria-expanded={open ? 'true' : undefined}>
 						<Avatar sx={{ width: 32, height: 32 }}>U</Avatar>
@@ -42,7 +44,10 @@ const Appbar = () => {
 					anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
 				>
 					<MenuItem onClick={() => (window.location.href = '/profile')}>Perfil</MenuItem>
-					<MenuItem onClick={() => Authentication.logout()}>Sair</MenuItem>
+					<MenuItem onClick={() => {
+						logout();
+						navigate('/login');
+					}}>Sair</MenuItem>
 				</Menu>
 			</Toolbar>
 		</AppBar>

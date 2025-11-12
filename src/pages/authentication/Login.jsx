@@ -9,8 +9,12 @@ import { modeloData } from "./modelo";
 import styles from './styles';
 import { useToast } from "../../context/ToastContext";
 import Database from "../../services/Database";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+    const { login } = useAuth();
+    const navigate = useNavigate();
     const { showToast } = useToast();
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
@@ -18,7 +22,7 @@ const Login = () => {
     const [loading, setLoading] = React.useState(false);
     
 
-const handleLogin = async () => {
+    const handleLogin = async () => {
         setLoading(true);
         setError(modeloData);
 
@@ -45,7 +49,7 @@ const handleLogin = async () => {
             return;
         }
         try {
-            const {data, error} = await Authentication.login(email, password);
+            const {data, error} = await login(email, password);
             if (error) {
                 throw error;
             }
@@ -58,8 +62,7 @@ const handleLogin = async () => {
                 },
             });
 
-            console.log(data)
-            
+
             Storage.setItem('user', {
                 user: {
                     ...data.user,
@@ -67,7 +70,8 @@ const handleLogin = async () => {
                 },
                 session: data.session
             });
-            window.location = '/';
+            
+            navigate("/");
         } catch (error) {
             if (error.message === "Invalid login credentials") {
                 showToast('E-mail ou senha inválidos', 'error');

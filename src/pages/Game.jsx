@@ -2,9 +2,11 @@ import React from "react";
 import { CardGamePlays, Grid, Typography } from "../components";
 import useGames from "../hooks/useGames";
 import { Box, Chip, Divider } from "@mui/material";
+import { useParams } from "react-router-dom";
 
-const Game = (props) => {
-    const id = props.currentRoute.replace('/game/', '');
+const Game = () => {
+    const { id } = useParams();
+
     const { game, findGame, loading } = useGames();
 
     React.useEffect(() => {

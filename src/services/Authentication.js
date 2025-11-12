@@ -21,7 +21,6 @@ const Authentication = {
     logout: async () => {
         Storage.clear();
         await supabase.auth.signOut();
-        window.location.reload();
     }
 }
 

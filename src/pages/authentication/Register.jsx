@@ -9,6 +9,7 @@ import styles from './styles';
 import { useToast } from "../../context/ToastContext";
 
 const Register = () => {
+    const { register } = useAuth();
     const { showToast } = useToast();
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
@@ -72,7 +73,7 @@ const Register = () => {
             return;
         }
         try {
-            const {data, error } = await Authentication.register(email, password);
+            const {data, error } = await register(email, password);
             if (error) {
                 throw error;
             }
