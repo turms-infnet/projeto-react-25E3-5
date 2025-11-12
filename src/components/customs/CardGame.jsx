@@ -8,9 +8,10 @@ import CardActions from '../default/CardActions';
 import Button from '../default/Button';
 import Fab from '../default/Fab';
 import Stack from '../default/Stack';
+import { useNavigate } from 'react-router-dom';
 
 export default function CardGame({ game }) {
-  const goToDetails = () => (window.location.href = '/game/' + game.id);
+  const navigate = useNavigate();
   const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).user : null;
 
   return <Stack sx={{
@@ -75,7 +76,9 @@ export default function CardGame({ game }) {
               )}
             </CardContent>
             <CardActions sx={{ px: 2, pb: 2 }}>
-              <Button variant="contained" onClick={goToDetails} fullWidth>
+              <Button variant="contained" onClick={() => {
+                navigate(`/game/${game.id}`);
+              }} fullWidth>
                 Ver detalhes
               </Button>
             </CardActions>

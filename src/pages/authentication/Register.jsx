@@ -2,11 +2,12 @@ import React from "react";
 import { Grid, Stack, Avatar, TextField, Button, Snackbar } from "../../components";
 import logo from '../../assets/images/logo-black.png';
 import { Typography } from "@mui/material";
-import Authentication from "../../services/Authentication";
 import { modeloData } from "./modelo";
 
 import styles from './styles';
 import { useToast } from "../../context/ToastContext";
+import { useAuth } from "../../context/AuthContext";
+import { Link } from "react-router-dom";
 
 const Register = () => {
     const { register } = useAuth();
@@ -136,7 +137,7 @@ const Register = () => {
                     variant="contained" color="primary" fullWidth onClick={handleRegister}>Cadastrar</Button>
             </Stack>
             <Stack spacing={2} sx={styles.stack}>
-                <a href="/login">Entrar</a>
+                <Link to="/login">Entrar</Link>
             </Stack>
         </Grid>
     </Grid>;

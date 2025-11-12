@@ -10,7 +10,7 @@ import styles from './styles';
 import { useToast } from "../../context/ToastContext";
 import Database from "../../services/Database";
 import { useAuth } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
     const { login } = useAuth();
@@ -119,7 +119,7 @@ const Login = () => {
                     variant="contained" color="primary" fullWidth onClick={handleLogin}>Entrar</Button>
             </Stack>
             <Stack spacing={2} sx={styles.stack}>
-                <a href="/register">Criar conta</a>
+                <Link to="/register">Criar conta</Link>
             </Stack>
         </Grid>
     </Grid>;

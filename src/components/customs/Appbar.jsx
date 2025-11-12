@@ -3,7 +3,7 @@ import { AppBar, Toolbar, Typography, IconButton, Box, Avatar, Menu, MenuItem, T
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Appbar = () => {
 	const navigate = useNavigate();
@@ -21,7 +21,9 @@ const Appbar = () => {
 					<MenuIcon />
 				</IconButton>
 				<Typography variant="h6" sx={{ fontWeight: 800, letterSpacing: '.2px' }}>
-					GameScore
+					<Link to="/">
+						GameScore
+					</Link>
 				</Typography>
 				<Box sx={{ flex: 1 }} />
 				<Tooltip title="Pesquisar">
@@ -43,7 +45,9 @@ const Appbar = () => {
 					transformOrigin={{ horizontal: 'right', vertical: 'top' }}
 					anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
 				>
-					<MenuItem onClick={() => (window.location.href = '/profile')}>Perfil</MenuItem>
+					<MenuItem onClick={() => {
+						navigate('/profile');
+					}}>Perfil</MenuItem>
 					<MenuItem onClick={() => {
 						logout();
 						navigate('/login');
