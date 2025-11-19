@@ -10,7 +10,7 @@ import Fab from '../default/Fab';
 import Stack from '../default/Stack';
 import { useNavigate } from 'react-router-dom';
 
-export default function CardGame({ game }) {
+export default function CardGame({ game, setSelectedGame, handleClickOpenConfirm, handleClickOpeEdit }) {
   const navigate = useNavigate();
   const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).user : null;
 
@@ -20,18 +20,33 @@ export default function CardGame({ game }) {
           { 
             user && user.role === 1 ? 
                 <>
-                  <Fab size="small" color="secondary" aria-label="edit" sx={{
-                    position: 'absolute',
-                    left: '-20px',
-                    top: '-20px',
-                  }}>
+                  <Fab 
+                    onClick={() => {
+                      handleClickOpeEdit(game);
+                    }}
+                    size="small" 
+                    color="secondary" 
+                    aria-label="edit" 
+                    sx={{
+                      position: 'absolute',
+                      left: '-20px',
+                      top: '-20px',
+                    }}>
                     <EditIcon />
                   </Fab>
-                  <Fab size="small" color="error" aria-label="edit" sx={{
-                    position: 'absolute',
-                    left: '-20px',
-                    top: '40px',
-                  }}>
+                  <Fab 
+                    onClick={() => {
+                      setSelectedGame(game);
+                      handleClickOpenConfirm();
+                    }}
+                    size="small" 
+                    color="error" 
+                    aria-label="edit" 
+                    sx={{
+                      position: 'absolute',
+                      left: '-20px',
+                      top: '40px',
+                    }}>
                     <DeleteIcon />
                   </Fab>
                 </>  : null

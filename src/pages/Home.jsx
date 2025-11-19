@@ -1,32 +1,56 @@
 import React from "react";
-import { Button, CardMedia, DatePicker, Fab, Grid, Stack, TextField } from "../components";
+import { Button, CardMedia, ConfirmDialog, DatePicker, Fab, Grid, Stack, TextField } from "../components";
 import useGames from "../hooks/useGames";
 import AddIcon from '@mui/icons-material/Add';
 import useFilter from "../hooks/useFilter";
+import { useToast } from "../context/ToastContext";
 import Filter from "../components/customs/Filter";
 import CardGame from "../components/customs/CardGame";
 import GameCardSkeleton from "../components/customs/GameCardSkeleton";
 import EmptyState from "../components/customs/EmptyState";
-import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select } from "@mui/material";
+import dayjs from "dayjs";
 
 const Home = () => {
-    const { games, listGames, loading, saveGame } = useGames();
+    const { games, listGames, loading, saveGame, deleteGame, updateGame } = useGames();
+    const { showToast } = useToast();
     const { filter, doFilter } = useFilter();
     const [data, setData] = React.useState({
+        id: null,
         title: '',
         description: '',
         image: '',
         release_date: null
     });
+    const [orderBy, setOrderBy] = React.useState({
+        field: 'title',
+        ascending: true
+    });
 
     const [open, setOpen] = React.useState(false);
+    const [openConfirm, setOpenConfirm] = React.useState(false);
+    const [selectedGame, setSelectedGame] = React.useState(null);
+    const [selectedOrderBy, setSelectedOrderBy] = React.useState(0);
 
     const handleClickOpen = () => {
         setOpen(true);
     };
 
+    const handleClickOpenConfirm = () => {
+        setOpenConfirm(true);
+    };
+
     const handleClose = () => {
         setOpen(false);
+
+        setData((v) => ({
+            ...v,
+            id: null,
+            title: '',
+            description: '',
+            image: '',
+            release_date: null
+        }));
     };
 
     const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).user : null;
@@ -51,16 +75,109 @@ const Home = () => {
         reader.readAsDataURL(file);
     }
 
+    const loadGames = () => {
+        if (filter.title.value) {
+            listGames(filter, 10, 1, false, orderBy);
+        } else{
+            listGames({
+                        "is_active": {
+                            value: true,
+                            exact: true
+                        }
+                      }, 10, 1, false, orderBy);
+        }
+    }
+
     React.useEffect(() => {
-        listGames(filter.title.value ? filter : null, 10, 1, false);
+        loadGames();
     }, [filter]);
 
+    React.useEffect(() => {
+        switch (selectedOrderBy) {
+            case 1:
+                setOrderBy({
+                    field: 'title',
+                    ascending: true
+                });
+                break;
+            case 2:
+                setOrderBy({
+                    field: 'title',
+                    ascending: false
+                });
+                break;
+            case 3:
+                setOrderBy({
+                    field: 'release_date',
+                    ascending: true
+                });
+                break;
+            case 4:
+                setOrderBy({
+                    field: 'release_date',
+                    ascending: false
+                });
+                break;
+            default:
+                break;
+        }
+    }, [selectedOrderBy]);
+
+    React.useEffect(() => {
+        loadGames();
+    }, [orderBy]);
+
+    const handleClickOpeEdit = (game) => {
+        setData((v) => ({
+            ...v,
+            id: game.id,
+            title: game.title,
+            description: game.description,
+            image: game.image,
+            release_date: dayjs(game.release_date)
+        }));
+
+        handleClickOpen();
+    }
+
     return <>
-                <Filter 
-                    label="Filtrar por título"
-                    filter={filter}
-                    doFilter={doFilter}
-                />
+                <Grid container spacing={3} sx={{ mt: 2 }}>
+                    <Grid item size={{
+                        xs: 12,
+                        sm: 9,
+                    }}>
+                        <Filter 
+                            label="Filtrar por título"
+                            filter={filter}
+                            doFilter={doFilter}
+                        />
+                    </Grid>
+                    <Grid item size={{
+                        xs: 12,
+                        sm: 3
+                    }}>
+                       <Select
+                            sx={{
+                                width: '100%',
+                                padding: '12px'
+                            }}
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={selectedOrderBy}
+                            fullWidth={true}
+                            label="Ordernar"
+                            onChange={(event) => {
+                                setSelectedOrderBy(event.target.value);
+                            }}
+                        >
+                            <MenuItem value={0}>Selecione uma opção</MenuItem>
+                            <MenuItem value={1}>Título A-Z</MenuItem>
+                            <MenuItem value={2}>Título Z-A</MenuItem>
+                            <MenuItem value={3}>Data de lançamento Antigo - Recente</MenuItem>
+                            <MenuItem value={4}>Data de lançamento Recente - Antigo</MenuItem>
+                        </Select> 
+                    </Grid>
+                </Grid>
                 <Grid container spacing={3} sx={{ mt: 2 }}>
                     {loading ? (
                         Array.from({ length: 12 }).map((_, idx) => (
@@ -87,14 +204,13 @@ const Home = () => {
                                         sm: 6,
                                         md: 3
                                     }} key={game.id}>
-                                    <CardGame game={game} />
+                                    <CardGame 
+                                        setSelectedGame={setSelectedGame}
+                                        handleClickOpenConfirm={handleClickOpenConfirm}
+                                        handleClickOpeEdit={handleClickOpeEdit}
+                                        game={game} />
                                 </Grid>
                             ))}
-                            <Grid item xs={12}>
-                                <Button variant="text" onClick={async () => {
-                                    listGames(filter.title.value ? filter : null, 10, 1, true);
-                                }}>Não encontrei meu jogo</Button>
-                            </Grid>
                         </>
                     )}
                 </Grid>
@@ -110,6 +226,24 @@ const Home = () => {
                     <AddIcon />
                 </Fab>  : null
             }
+            <ConfirmDialog 
+                open={openConfirm}
+                setOpen={setOpenConfirm}
+                title="Deletar"
+                message="Tem certeza que deseja deletar esse jogo?"
+                onConfirm={async () =>{
+                    await deleteGame(selectedGame.id);
+                    setOpenConfirm(false);
+                    setSelectedGame(null);
+                    await loadGames();
+                    showToast('Jogo deletado com sucesso.', 'success');
+                }}
+                onCancel={() => {
+                    setOpenConfirm(false);
+                    setSelectedGame(null);
+                    showToast('Ação cancelada.', 'info');
+                }}
+            />
             <Dialog
                 maxWidth={'lg'}
                 fullWidth={true}
@@ -189,8 +323,21 @@ const Home = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancelar</Button>
-                    <Button onClick={() => {
-                        saveGame(data, filter.title.value ? filter : null, 10, 1, false);
+                    <Button onClick={async () => {
+                        if (data.id == null) {
+                            await saveGame({
+                                title: data.title,
+                                description: data.description,
+                                image: data.image,
+                                release_date: data.release_date
+                            });
+                        } else {
+                            await updateGame(data.id, data);
+                        }
+
+                        await loadGames();
+                        handleClose();
+                        showToast('Jogo salvo com sucesso.', 'success');
                     }} autoFocus>Salvar</Button>
                 </DialogActions>
             </Dialog>

@@ -9,7 +9,7 @@ const useGames = () => {
     const [numberOfTotalResults, setNumberOfTotalResults] = React.useState(0);
     const [loading, setLoading] = React.useState(false);
 
-    const saveGame = useCallback(async (data, filter, limit, page, api) => {
+    const saveGame = useCallback(async (data) => {
         setLoading(true);
         try {
             const image = await Bucket.upload('games', Bucket.generateNameFile(data.title), data.image);
@@ -18,12 +18,11 @@ const useGames = () => {
             const { data: d, error } = await Database.create('game', data);
             console.log(d)
         } finally {
-            listGames(filter, limit, page, api);
+            setLoading(false);
         }
-        setLoading(false);
     });
 
-    const listGames = useCallback(async (filter, limit, page, api) => {
+    const listGames = useCallback(async (filter, limit, page, api, orderBy) => {
         setLoading(true);
         try {
             if (api) {
@@ -31,7 +30,14 @@ const useGames = () => {
                 setGames(games.data);
                 setNumberOfTotalResults(games.number_of_total_results);
             } else {
-                const { data, error } = await Database.list('game', '*', filter, limit, page);
+                if (!orderBy) {
+                    orderBy = {
+                        field: 'title',
+                        ascending: true
+                    }
+                }
+
+                const { data, error } = await Database.list('game', '*', filter, limit, page, orderBy);
                 if (!error) {
                     if (data.length > 0) {
                         let i = 0;
@@ -81,6 +87,31 @@ const useGames = () => {
         }
     }, []);
 
+    const deleteGame = useCallback(async (id) => {
+        setLoading(true);
+        try {
+            await Database.update('game', {
+                is_active: false
+            }, id);
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    const updateGame = useCallback(async (id, data) => {
+        setLoading(true);
+        try {
+            await Database.update('game', data, id);
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+
     const ratingGame = useCallback(async (id, rating) => {
 
     }, [listGames, findGame]);
@@ -89,7 +120,7 @@ const useGames = () => {
     }, [listGames, findGame]);
 
     return {
-        listGames, findGame, ratingGame, ratingGamePlay, games, game, numberOfTotalResults, loading, saveGame
+        listGames, findGame, ratingGame, ratingGamePlay, games, game, numberOfTotalResults, loading, updateGame, saveGame, deleteGame
     };
 }
 

@@ -5,6 +5,10 @@ const useFilter = () => {
         "title": {
             value: null,
             exact: false
+        },
+        "is_active": {
+            value: true,
+            exact: true
         }
     });
 

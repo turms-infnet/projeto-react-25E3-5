@@ -1,6 +1,6 @@
 import supabase from "./SupabaseClient";
 
-const list = async (table, fields, filter, limit) => {
+const list = async (table, fields, filter, limit, page, orderBy) => {
     let response = supabase
         .from(table)
         .select(fields);
@@ -17,6 +17,10 @@ const list = async (table, fields, filter, limit) => {
 
     if (limit) {
         response = response.limit(limit);
+    }
+
+    if (orderBy) {
+        response = response.order(orderBy.field, { ascending: orderBy.ascending });
     }
 
     return await response;
