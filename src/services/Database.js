@@ -46,6 +46,12 @@ const Database = {
             .delete()
             .eq('id', id);
     },
+    upsert: async (table, data) => {
+        return await supabase
+            .from(table)
+            .upsert(data)
+            .select();
+    },
     list: list,
     find: async (table, id) => {
         return await list(table, "*", {
