@@ -9,6 +9,8 @@ import CardGame from "../components/customs/CardGame";
 import GameCardSkeleton from "../components/customs/GameCardSkeleton";
 import EmptyState from "../components/customs/EmptyState";
 import { Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select } from "@mui/material";
+import { convertFileToBase64 } from "../utils/Image";
+
 import dayjs from "dayjs";
 
 const Home = () => {
@@ -55,25 +57,7 @@ const Home = () => {
 
     const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).user : null;
 
-    const convertFileToBase64 = (file) => {
-        if(!file) {
-            setData((values) => ({
-                ...values,
-                image: ''
-            }));
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            const base64String = reader.result;
-            setData((values) => ({
-                ...values,
-                image: base64String
-            }))
-        }
-        reader.readAsDataURL(file);
-    }
+    
 
     const loadGames = () => {
         if (filter.title.value) {
@@ -289,7 +273,7 @@ const Home = () => {
                                 fullWidth
                                 onChange={(e) => {
                                     const file = e.target.files[0];
-                                    convertFileToBase64(file)
+                                    convertFileToBase64(file, setData)
                                 }} />
                             { data.image ? <label for="image">
                                 <CardMedia sx={{

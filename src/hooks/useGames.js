@@ -70,14 +70,7 @@ const useGames = () => {
                         data[0].image = image;
                     }
 
-                    const gamePlay = await Database.list('game_play', '*', {
-                        "xid_game": {
-                            exact: true,
-                            value: data[0].id
-                        }
-                    }, 100, 1);
-
-                    setGame({ ...data[0], gameplays: gamePlay.data });
+                    setGame({ ...data[0] });
                 } else {
                     setGame({});
                 }
@@ -111,64 +104,8 @@ const useGames = () => {
         }
     }, []);
 
-    const ratingGame = useCallback(async (id, rating, userId, gameId) => {
-        setLoading(true);
-        try {
-            let data = {
-                xid_user: userId,
-                xid_game: gameId,
-                value: rating
-            }
-            if (id) {
-                data.id = id;
-            }
-
-            return await Database.upsert('rating_game', data);
-        } catch (e) {
-            console.error(e);
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
-    const getRatingGame = useCallback(async (userId, gameId) => {
-        setLoading(true);
-        try {
-            const { data, error } = await Database.findBy('rating_game', {
-                xid_user: {
-                    exact: true,
-                    value: userId
-                },
-                xid_game: {
-                    exact: true,
-                    value: gameId
-                }
-            });
-            console.log(userId)
-            console.log(gameId)
-            if (!error) {
-                if (data.length > 0) {
-                    return data[0];
-                }
-            }
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
-    const getRatingGameGeneral = useCallback(async (gameId) => {
-        setLoading(true);
-
-        setLoading(false);
-
-        return 0;
-    });
-
-    const ratingGamePlay = useCallback(async (id, rating) => {
-    }, [listGames, findGame]);
-
     return {
-        listGames, findGame, ratingGame, ratingGamePlay, games, game, numberOfTotalResults, loading, updateGame, saveGame, deleteGame, getRatingGame, getRatingGameGeneral
+        listGames, findGame, games, game, numberOfTotalResults, loading, updateGame, saveGame, deleteGame
     };
 }
 
