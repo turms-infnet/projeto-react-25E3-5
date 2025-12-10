@@ -1,11 +1,16 @@
-import React from 'react';
+import { Pagination as MuiPagination } from '@mui/material';
+import { useEffect } from 'react';
+import useGames from '../../hooks/useGames';
 
-const Pagination = () => {
-	return (
-		<div>
-			Aqui entrará um Pagination
-		</div>
-	);
+const Pagination = (props) => {
+    const { countTotalGames, numberOfTotalResults } = useGames();
+	const count = numberOfTotalResults / props.limit;
+
+	useEffect(() => {
+		countTotalGames();
+	}, [numberOfTotalResults]);
+
+
+	return <MuiPagination {...props} count={count}/>
 }
-
 export default Pagination;

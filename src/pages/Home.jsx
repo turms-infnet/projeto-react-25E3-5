@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, CardMedia, ConfirmDialog, DatePicker, Fab, Grid, Stack, TextField } from "../components";
+import { Button, CardMedia, ConfirmDialog, DatePicker, Fab, Grid, Pagination, Stack, TextField } from "../components";
 import useGames from "../hooks/useGames";
 import AddIcon from '@mui/icons-material/Add';
 import useFilter from "../hooks/useFilter";
@@ -17,6 +17,8 @@ const Home = () => {
     const { games, listGames, loading, saveGame, deleteGame, updateGame } = useGames();
     const { showToast } = useToast();
     const { filter, doFilter } = useFilter();
+    const [page, setPage] = React.useState(1);
+    const [limit, setLimit] = React.useState(2);
     const [data, setData] = React.useState({
         id: null,
         title: '',
@@ -57,24 +59,22 @@ const Home = () => {
 
     const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).user : null;
 
-    
-
     const loadGames = () => {
         if (filter.title.value) {
-            listGames(filter, 10, 1, false, orderBy);
+            listGames(filter, limit, page, false, orderBy);
         } else{
             listGames({
                         "is_active": {
                             value: true,
                             exact: true
                         }
-                      }, 10, 1, false, orderBy);
+                      }, limit, page, false, orderBy);
         }
     }
 
     React.useEffect(() => {
         loadGames();
-    }, [filter]);
+    }, [filter, page]);
 
     React.useEffect(() => {
         switch (selectedOrderBy) {
@@ -195,6 +195,12 @@ const Home = () => {
                                         game={game} />
                                 </Grid>
                             ))}
+                            <Grid item 
+                                    size={{
+                                        xs: 12
+                                    }}>
+                                <Pagination variant="outlined" limit={2} setPage={setPage}/>
+                            </Grid>
                         </>
                     )}
                 </Grid>

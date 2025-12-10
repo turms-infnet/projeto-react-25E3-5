@@ -9,6 +9,20 @@ const useGames = () => {
     const [numberOfTotalResults, setNumberOfTotalResults] = React.useState(0);
     const [loading, setLoading] = React.useState(false);
 
+    const countTotalGames = useCallback(async (filter) => {
+        try {
+            setLoading(true);
+            const { data, error } = await Database.list('game', 'total_rows:id.count()', null, 1, null, null);
+            setNumberOfTotalResults(data[0]?.total_rows || 0);
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setLoading(false);
+        }
+
+        return 0;
+    }, []);
+
     const saveGame = useCallback(async (data) => {
         setLoading(true);
         try {
@@ -105,7 +119,7 @@ const useGames = () => {
     }, []);
 
     return {
-        listGames, findGame, games, game, numberOfTotalResults, loading, updateGame, saveGame, deleteGame
+        countTotalGames, listGames, findGame, games, game, numberOfTotalResults, loading, updateGame, saveGame, deleteGame
     };
 }
 
