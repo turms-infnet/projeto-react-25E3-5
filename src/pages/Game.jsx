@@ -8,18 +8,23 @@ import { useParams } from "react-router-dom";
 import { useToast } from "../context/ToastContext";
 import { convertFileToBase64 } from "../utils/Image";
 import useRating from "../hooks/useRating";
+import useRatingGameplay from "../hooks/useRatingGameplay";
 
 const Game = () => {
     const { id } = useParams();
     const { game, findGame, loading } = useGames();
     const { saveGameplay, updateGameplay, deleteGameplay, listGamePlay, gameplays, loadingGameplay } = useGamePlays();
     const { ratingGame, getRatingGame, getRatingGameGeneral, ratingGameValue } = useRating();
+    const { ratingGameplay, getRatingGameplay, getRatingGameplayGeneral, ratingGameplayValue, loadingRatingGameplay } = useRatingGameplay();
     const { showToast } = useToast();
 
     const [open, setOpen] = React.useState(false);
     const [page, setPage] = React.useState(1);
     const [userRatingId, setUserRatingId] = React.useState(null);
     const [userRating, setUserRating] = React.useState(0);
+    const [userRatingGameplayId, setUserRatingGameplayId] = React.useState(null);
+    const [userRatingGameplay, setUserRatingGameplay] = React.useState(0);
+
     const [data, setData] = React.useState({
         id: null,
         title: '',
@@ -28,22 +33,35 @@ const Game = () => {
     });
 
     const [openConfirm, setOpenConfirm] = React.useState(false);
+    const [openInformation, setOpenInformation] = React.useState(false);
     const [selectedGameplay, setSelectedGameplay] = React.useState(null);
 
     const handleClickOpenConfirm = () => {
         setOpenConfirm(true);
     };
 
+    const handleClickOpenInformation = (_selectedGameplay) => {
+        setOpenInformation(true);
+        loadRatingGameplay(_selectedGameplay.id);
+    }
+
     const handleClose = () => {
         setOpen(false);
 
-        setData((v) => ({
+        setSelectedGameplay((v) => ({
             ...v,
             id: null,
             title: '',
             url: '',
             image: '',
         }));
+    };
+
+    const handleCloseInformation = () => {
+        setOpenInformation(false);
+
+        setUserRatingGameplayId(null);
+        setUserRatingGameplay(null);
     };
 
     const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).user : null;
@@ -64,6 +82,15 @@ const Game = () => {
         if (data) {
             setUserRatingId(data.id);
             setUserRating(data.value);
+        }
+    }
+
+    const loadRatingGameplay = async (gameplayId) => {
+        const data = await getRatingGameplay(user.id, gameplayId);
+        await getRatingGameplayGeneral(gameplayId);
+        if (data) {
+            setUserRatingGameplayId(data.id);
+            setUserRatingGameplay(data.value);
         }
     }
 
@@ -147,6 +174,7 @@ const Game = () => {
                                 setSelectedGameplay={setSelectedGameplay}
                                 handleClickOpenConfirm={handleClickOpenConfirm}
                                 handleClickOpeEdit={handleClickOpeEdit}
+                                handleClickOpenInformation={handleClickOpenInformation}
                                 gameplay={gp} 
                                 user={user} />
                         )) : (
@@ -251,10 +279,73 @@ const Game = () => {
                     }} autoFocus>Salvar</Button>
                 </DialogActions>
             </Dialog>
+            <Dialog
+                maxWidth={'lg'}
+                fullWidth={true}
+                open={openInformation}
+                onClose={handleCloseInformation}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">Gameplay {selectedGameplay?.title}</DialogTitle>
+                <DialogContent>
+                    <Grid container spacing={3} sx={{ mt: 2 }}>
+                        <Grid item size={{ xs: 12, md: 8 }}>
+                            <img src={selectedGameplay?.image} alt={selectedGameplay?.title} style={{ width: '100%', display: 'block', marginBottom: '20px' }} />
+                        </Grid>
+                        <Grid item size={{ xs: 12, md: 4 }}>
+                            <>
+                                <Typography variant="h6" gutterBottom>{selectedGameplay?.title}</Typography>
+                                <Stack direction="column" spacing={2} justifyContent="flex-start" alignItems="flex-start" sx={{ mb: 2 }}>
+                                    <Paper elevation={0} sx={{
+                                        backgroundColor: 'transparent',
+                                    }}>
+                                        <Rating 
+                                            min={0} 
+                                            max={5}
+                                            precision={0.1}
+                                            value={userRatingGameplay} 
+                                            onChange={async (event, newValue) => {
+                                                try {
+                                                    let valueFinal = 0;
+                                                    if (newValue !== null) {
+                                                        valueFinal = newValue;
+                                                    }
+
+                                                    setUserRatingGameplay(valueFinal);
+                                                    const { data: d, error } = await ratingGameplay(userRatingGameplayId, valueFinal, user.id, selectedGameplay.id);
+                                                    if (error) {
+                                                        showToast(error.message, 'error');
+                                                    } else {
+                                                        setUserRatingGameplayId(d[0].id);
+                                                        showToast('Avaliação de gameplay enviada com sucesso!', 'success');
+                                                    }
+                                                } catch (error) {
+                                                    showToast('Erro ao enviar avaliação de gameplay.', 'error');
+                                                }
+                                            }} label="Sua avaliação de gameplay"/>
+                                    </Paper>
+                                    <Paper elevation={0} sx={{
+                                        backgroundColor: 'transparent',
+                                    }}>
+                                        <Typography variant="h6" gutterBottom>Avaliação geral: {Number(ratingGameplayValue).toFixed(1)}</Typography>
+                                    </Paper>
+                                    <Button variant="contained" color="primary" href={selectedGameplay?.url} target="_blank" rel="noopener noreferrer">
+                                        Assistir Gameplay
+                                    </Button>
+                                </Stack>
+                            </>
+                        </Grid>
+                    </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseInformation}>Fechar</Button>
+                </DialogActions>
+            </Dialog>
             {
                 user && user.role === 1 ? 
                 <Fab color="secondary" aria-label="edit" sx={{
-                    position: 'absolute',
+                    position: 'fixed',
                     right: '20px',
                     bottom: '20px',
                     }}

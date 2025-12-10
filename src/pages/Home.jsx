@@ -201,7 +201,7 @@ const Home = () => {
                 { 
             user && user.role === 1 ? 
                 <Fab color="secondary" aria-label="edit" sx={{
-                    position: 'absolute',
+                    position: 'fixed',
                     right: '20px',
                     bottom: '20px',
                     }}
